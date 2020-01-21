@@ -17,8 +17,9 @@ grey = function() {
 #' @importFrom clisymbols symbol
 #' @importFrom gert git_status
 rstudio_prompt = function(expr, value, ok, visible) {
-  status = if (ok) crayon::green(clisymbols::symbol$tick)
-  else crayon::red(clisymbols::symbol$cross)
+  user = Sys.info()[['user']]
+  status = if (ok) crayon::green(glue::glue("<{user}>"))
+  else crayon::red(glue::glue({user}))
 
   mem = display_memuse()
   gstatus = try(gert::git_status(), silent = TRUE)
