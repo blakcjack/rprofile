@@ -3,8 +3,12 @@
 
 get_wifi = function() {
   if (Sys.info()[['sysname']] == "Windows") {
-    wifi_name = gsub("SSID 1 : ", "", system("netsh wlan show network", intern = T)[5])
+    wifi_name = gsub("    SSID                   : ",
+                     "", system("Netsh WLAN show interfaces", intern = T)[[9]])
     glue::glue("{wifi_name}")
+    wifi_signal = gsub("    Signal                 : ",
+                       "", system("Netsh WLAN show interfaces", intern = T)[[19]])
+    glue::glue("{wifi_name} (", trimws("{wifi_signal}"), ")")
   } else {
     wifi = system2("nmcli", args = c("dev", "wifi"), stdout = TRUE)
     if (length(wifi) <= 1L) return(crayon::red(symbol$cross))
